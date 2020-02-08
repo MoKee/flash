@@ -10,7 +10,9 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.1.0"
+    "vue-upload-component": "^2.8.20",
+    "vuetify": "^2.1.0",
+    "webadb": "git+ssh://git@github.com/xingrz/webadb.js.git#umd"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",
