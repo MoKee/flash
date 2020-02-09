@@ -1,24 +1,27 @@
-# sideload
+Flash MoKee
+==========
 
-## Project setup
+ADB Sideload via browser.
+
+## Develop
+
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Build
+
 ```
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Libraries used
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* [webadb.js](https://github.com/webadb/webadb.js)
+* [Vue.js](https://vuejs.org/)
+* [Vuetify](https://vuetifyjs.com/)
+
+# License
+
+Apache License 2.0
