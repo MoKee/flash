@@ -1,4 +1,4 @@
-Flash MoKee
+[Flash MoKee](https://flash.rom.mk/)
 ==========
 
 ADB Sideload via browser.
@@ -7,6 +7,7 @@ ADB Sideload via browser.
 
 ```
 npm install
+npm run build-i18n
 npm run serve
 ```
 
