@@ -99,7 +99,10 @@
           <v-stepper-content step="4">
             <div class="section" v-if="flashing">
               <p>正在刷入，请稍候…</p>
-              <v-progress-linear v-bind:value="progress" />
+              <v-progress-linear
+                v-bind:value="progress ? Math.round(progress / progressTotal * 100) : 0"
+                v-bind:indeterminate="progress == 0"
+              />
             </div>
             <div class="section" v-else>
               <p>一切就绪，请点击「开始刷机」。</p>
@@ -120,7 +123,7 @@
               <p>恭喜，刷机已完成。如果没遇到什么错误，你现在可以重启你的手机了。<a>遇到错误？</a></p>
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="step = 1">完成并返回开始</v-btn>
+              <v-btn color="primary" v-on:click="reset">完成并返回开始</v-btn>
             </div>
           </v-stepper-content>
         </v-stepper>
@@ -132,6 +135,8 @@
 <script>
 import Adb from 'webadb';
 import upload from 'vue-upload-component';
+
+import readFile from './utils/readFile';
 
 export default {
   name: 'App',
@@ -148,6 +153,7 @@ export default {
       selected: null,
       flashing: false,
       progress: 0,
+      progressTotal: 0,
       snackbarShown: false,
       snackbarText: '',
     };
@@ -169,15 +175,14 @@ export default {
         this.selected = null;
         this.showSnackbar('刷机包文件应该是 ZIP 格式');
       } else {
-        this.selected = file;
+        this.selected = file.file;
+        this.step = 3;
       }
     },
     async connect() {
       try {
         this.usb = await Adb.open('WebUSB');
         this.adb = await this.usb.connectAdb('host::');
-        console.log(this.usb);
-        console.log(this.adb);
         if (this.adb.mode != 'sideload') {
           this.showSnackbar('手机未处于 Sideload 模式');
           this.usb.close();
@@ -195,19 +200,54 @@ export default {
       }
     },
     async sideload() {
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
       this.flashing = true;
+      this.progress = 0;
 
-      for (let i = 0; i <= 100; i++) {
-        this.progress = i;
-        await sleep(200);
+      const chunk_size = 64 * 1024;
+
+      const content = await readFile(this.selected);
+      const stream = await this.adb.open(`sideload-host:${content.length}:${chunk_size}`);
+
+      this.progressTotal = content.length;
+
+      while (this.flashing) {
+        const response = await stream.receive();
+
+        if (response.cmd == 'OKAY') {
+          await stream.send('OKAY');
+        }
+
+        if (response.cmd != 'WRTE') {
+          continue;
+        }
+
+        const result = new TextDecoder("utf-8").decode(response.data);
+        if (result == 'DONEDONE' || result == 'FAILFAIL') {
+          this.step = 5;
+          this.flashing = false;
+          break;
+        }
+
+        const start = parseInt(result) * chunk_size;
+        let end = start + chunk_size;
+        if (end > content.length) {
+          end = content.length;
+        }
+
+        const data = content.slice(start, end);
+
+        await stream.send('WRTE', data);
+        await stream.send('OKAY');
+
+        this.progress += data.length;
       }
-
-      this.step = 5;
-      this.flashing = false;
+    },
+    reset() {
+      this.name = null;
+      this.selected = null;
+      this.progress = 0;
+      this.progressTotal = 0;
+      this.step = 1;
     },
   },
 };
