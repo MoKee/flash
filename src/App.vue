@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <h1>MoKee 浏览器刷机向导 <small>(beta)</small></h1>
+    <h1 v-html="$t('title')" />
 
     <v-snackbar v-model="snackbarShown">
       {{ snackbarText }}
@@ -10,35 +10,35 @@
       <v-container class="container">
         <v-stepper v-model="step" vertical>
           <v-stepper-step v-bind:complete="step > 1" step="1">
-            <span class="step">准备</span>
+            <span class="step">{{ $t('step1:title') }}</span>
           </v-stepper-step>
 
           <v-stepper-content step="1">
             <div class="section" v-if="supported">
-              <p>你需要准备以下事情：</p>
+              <p v-html="$t('step1:p1')" />
               <p>
                 <ol>
-                  <li>一部<a href="https://download.mokeedev.com/devices.html">受支持的手机</a>，并且已经刷入了 TWRP；</li>
-                  <li>将手机重启到 TWRP 模式；</li>
-                  <li>如果你是第一次使用魔趣，请进行一次数据清除操作（如果不是特别情况，不需要进行高级清除）；</li>
-                  <li>你可能还需要将底包更新到 ROM 所要求的版本；</li>
-                  <li>你已经下载好了魔趣 ROM 的卡刷包。</li>
+                  <li v-html="$t('step1:p1:li1')" />
+                  <li v-html="$t('step1:p1:li2')" />
+                  <li v-html="$t('step1:p1:li3')" />
+                  <li v-html="$t('step1:p1:li4')" />
+                  <li v-html="$t('step1:p1:li5')" />
                 </ol>
               </p>
             </div>
             <div class="section" v-else>
-              <p>你的浏览器不支持 WebUSB API。</p>
-              <p>建议更换为最新版本的 Google Chrome。</p>
+              <p v-html="$t('step1:unsupported:p1')" />
+              <p v-html="$t('step1:unsupported:p2')" />
             </div>
             <div class="nav" v-if="supported">
-              <v-btn color="primary" v-on:click="step = 2">继续</v-btn>
+              <v-btn color="primary" v-on:click="step = 2">{{ $t('step1:next') }}</v-btn>
             </div>
           </v-stepper-content>
 
           <v-stepper-step v-bind:complete="step > 2" step="2" v-bind:rules="[() => supported]">
-            <span class="step" v-if="!supported">浏览器不支持</span>
-            <span class="step" v-else-if="selected">已选择: {{selected ? selected.name : null}}</span>
-            <span class="step" v-else>选择刷机包</span>
+            <span class="step" v-if="!supported">{{ $t('step2:title:unsupported') }}</span>
+            <span class="step" v-else-if="selected">{{ $t('step2:title:selected', { name: selected ? selected.name : null }) }}</span>
+            <span class="step" v-else>{{ $t('step2:title') }}</span>
           </v-stepper-step>
 
           <v-stepper-content step="2">
@@ -53,77 +53,67 @@
                 v-bind:drop-directory="false"
                 v-on:input-file="selectFile"
               >
-                <div class="upload-hint active" v-if="uploader && uploader.dropActive">
-                  将刷机包推动到此处并放下
-                </div>
-                <div class="upload-hint selected" v-else-if="selected">
-                  {{selected ? selected.name : null}}
-                </div>
-                <div class="upload-hint" v-else>
-                  将刷机包拖动到此处或<a>点击选择</a>
-                </div>
+                <div class="upload-hint active" v-if="uploader && uploader.dropActive" v-html="$t('step2:uploader:active')" />
+                <div class="upload-hint selected" v-else-if="selected">{{selected ? selected.name : null}}</div>
+                <div class="upload-hint" v-else v-html="$t('step2:uploader:normal')" />
               </upload>
             </div>
             <div class="nav">
-              <v-btn
-                color="primary"
-                v-on:click="step = 3"
-                v-bind:disabled="!selected"
-              >下一步</v-btn>
+              <v-btn color="primary" v-on:click="step = 3" v-bind:disabled="!selected">{{ $t('step2:next') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 1">上一步</v-btn>
+              <v-btn text v-on:click="step = 1">{{ $t('step2:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
           <v-stepper-step v-bind:complete="step > 3" step="3">
-            <span class="step" v-if="name">已连接: {{name}}</span>
-            <span class="step" v-else>连接手机</span>
+            <span class="step" v-if="name">{{ $t('step3:title:connected', { name }) }}</span>
+            <span class="step" v-else>{{ $t('step3:title') }}</span>
           </v-stepper-step>
 
           <v-stepper-content step="3">
             <div class="section">
-              <p>请将手机切换到 TWRP 的 ADB Sideload 模式并连接到电脑，然后点击下面的「连接手机」按钮。在弹出的对话框中选中你的手机，并点击「连接」。</p>
-              <p>如果你是在 Windows 下刷机，并且在对话框中看不到你的手机，你可能需要先安装<a href="https://developer.android.com/studio/run/win-usb">相应的驱动程序</a>。</p>
+              <p v-html="$t('step3:p1')" />
+              <p v-html="$t('step3:p2')" />
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="connect">连接手机</v-btn>
+              <v-btn color="primary" v-on:click="connect">{{ $t('step3:connect') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 2">上一步</v-btn>
+              <v-btn text v-on:click="step = 2">{{ $t('step3:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
           <v-stepper-step v-bind:complete="step > 4" step="4">
-            <span class="step">刷机</span>
+            <span class="step">{{ $t('step4:title') }}</span>
           </v-stepper-step>
 
           <v-stepper-content step="4">
             <div class="section" v-if="flashing">
-              <p>正在刷入，请稍候…</p>
+              <p v-html="$t('step4:flashing')" />
               <v-progress-linear
                 v-bind:value="progress ? Math.round(progress / progressTotal * 100) : 0"
                 v-bind:indeterminate="progress == 0"
               />
             </div>
             <div class="section" v-else>
-              <p>一切就绪，请点击「开始刷机」。</p>
+              <p v-html="$t('step4:p1')" />
             </div>
             <div class="nav" v-if="!flashing">
-              <v-btn color="primary" v-on:click="sideload">开始刷机</v-btn>
+              <v-btn color="primary" v-on:click="sideload">{{ $t('step4:start') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 3">上一步</v-btn>
+              <v-btn text v-on:click="step = 3">{{ $t('step4:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
           <v-stepper-step v-bind:complete="step > 5" step="5">
-            <span class="step">完成</span>
+            <span class="step">{{ $t('step5:title') }}</span>
           </v-stepper-step>
 
           <v-stepper-content step="5">
             <div class="section">
-              <p>恭喜，刷机已完成。如果没遇到什么错误，你现在可以重启你的手机了。<a>遇到错误？</a></p>
+              <p v-html="$t('step5:p1')" />
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="reset">完成并返回开始</v-btn>
+              <v-btn color="primary" v-on:click="reset">{{ $t('step5:reset') }}</v-btn>
             </div>
           </v-stepper-content>
         </v-stepper>
@@ -178,7 +168,7 @@ export default {
         this.selected = null;
       } else if (!file.name.endsWith('.zip')) {
         this.selected = null;
-        this.showSnackbar('刷机包文件应该是 ZIP 格式');
+        this.showSnackbar(this.$t('hint:zip'));
       } else {
         this.selected = file.file;
         this.step = 3;
@@ -189,7 +179,7 @@ export default {
         this.usb = await Adb.open('WebUSB');
         this.adb = await this.usb.connectAdb('host::');
         if (this.adb.mode != 'sideload') {
-          this.showSnackbar('手机未处于 Sideload 模式');
+          this.showSnackbar(this.$t('hint:sideload'));
           this.usb.close();
           return;
         }
@@ -200,7 +190,7 @@ export default {
       } catch (e) {
         console.error(e);
         if (e.name != 'NotFoundError') {
-          this.showSnackbar('连接失败，请重试');
+          this.showSnackbar(this.$t('hint:connect'));
         }
       }
     },

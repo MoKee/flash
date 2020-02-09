@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build-i18n": "build/gen_i18n.sh",
+    "build-vue": "vue-cli-service build",
+    "build": "npm run build-i18n && npm run build-vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "detect-nearest-browser-locale": "^19.0.0",
     "vue": "^2.6.11",
+    "vue-i18n": "^8.15.3",
     "vue-upload-component": "^2.8.20",
     "vuetify": "^2.1.0",
     "webadb": "git+https://github.com/xingrz/webadb.js.git#umd"
