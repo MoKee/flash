@@ -14,4 +14,4 @@ deploy:
   fqdn: flash.mokeedev.com
   keep-history: true
   on:
-    branch: v2
+    branch: master
