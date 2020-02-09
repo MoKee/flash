@@ -129,6 +129,11 @@
         </v-stepper>
       </v-container>
     </v-content>
+
+    <footer>
+      Copyright &copy; 2020 MoKee Open Source Project
+    </footer>
+
   </v-app>
 </template>
 
@@ -262,6 +267,12 @@ h1 {
 
 h1 small {
   font-size: 14px;
+}
+
+footer {
+  font-size: 12px;
+  color: #999;
+  margin: 0 16px 20px;
 }
 
 .container {
