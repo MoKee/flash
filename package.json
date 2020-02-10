@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build-i18n": "build/gen_i18n.sh",
+    "serve": "npm run build-i18n && vue-cli-service serve",
+    "build-i18n": "node build/gen_i18n.js",
     "build-vue": "vue-cli-service build",
     "build": "npm run build-i18n && npm run build-vue",
     "lint": "vue-cli-service lint"
