@@ -11,8 +11,11 @@ Vue.config.productionTip = false;
 
 Vue.use(VueI18n);
 
+const supportedLangs = Object.keys(messages).sort();
+const preferredLangs = navigator.languages;
+
 const i18n = new VueI18n({
-  locale: selectLanguage(Object.keys(messages), navigator.languages),
+  locale: selectLanguage(supportedLangs, preferredLangs),
   fallbackLocale: 'en-US',
   messages,
 });
