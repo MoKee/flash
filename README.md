@@ -7,7 +7,6 @@ ADB Sideload via browser.
 
 ```
 npm install
-npm run build-i18n
 npm run serve
 ```
 
