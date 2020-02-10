@@ -1,13 +1,25 @@
 <template>
   <v-app>
-    <h1 v-html="$t('title')" />
-
     <v-snackbar v-model="snackbarShown">
       {{ snackbarText }}
     </v-snackbar>
 
     <v-content>
       <v-container class="container">
+        <header>
+          <div class="langs">
+            <v-select
+              solo
+              dense
+              flat
+              v-model="$root.$i18n.locale"
+              v-bind:items="langs"
+              prepend-inner-icon="mdi-web"
+            />
+          </div>
+          <h1 v-html="$t('title')" />
+        </header>
+
         <v-stepper v-model="step" vertical>
           <v-stepper-step v-bind:complete="step > 1" step="1">
             <span class="step">{{ $t('step1:title') }}</span>
@@ -131,7 +143,15 @@
 import Adb from 'webadb';
 import upload from 'vue-upload-component';
 
+import messages from './i18n';
 import readFile from './utils/readFile';
+
+const langs = Object.keys(messages)
+  .sort()
+  .map(lang => ({
+    text: messages[lang].name,
+    value: lang,
+  }));
 
 export default {
   name: 'App',
@@ -140,6 +160,7 @@ export default {
   },
   data() {
     return {
+      langs: langs,
       supported: typeof navigator.usb != 'undefined',
       step: 1,
       name: null,
@@ -250,13 +271,23 @@ export default {
 
 <style>
 h1 {
+  min-height: 38px;
+  line-height: 38px;
   font-size: 24px;
   font-weight: normal;
-  margin: 20px 20px 10px;
+  margin: 0 0 10px 10px;
 }
 
 h1 small {
   font-size: 14px;
+}
+
+.langs {
+  max-width: 150px;
+  height: 38px;
+  float: right;
+  font-size: 12px;
+  margin-right: 4px;
 }
 
 footer {
