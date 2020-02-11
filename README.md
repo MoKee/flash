@@ -30,6 +30,10 @@ git remote add review ssh://YOURNAME@mokeedev.review:29418/MoKee/flash
 git push review HEAD:refs/for/master
 ```
 
+## Localization
+
+https://translate.mokeedev.com/
+
 ## Libraries used
 
 * [webadb.js](https://github.com/webadb/webadb.js)
