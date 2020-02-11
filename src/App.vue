@@ -43,7 +43,7 @@
               <p v-html="$t('step1:unsupported:p2')" />
             </div>
             <div class="nav" v-if="supported">
-              <v-btn color="primary" v-on:click="step = 2">{{ $t('step1:next') }}</v-btn>
+              <v-btn color="primary" depressed v-on:click="step = 2">{{ $t('step1:next') }}</v-btn>
             </div>
           </v-stepper-content>
 
@@ -71,9 +71,9 @@
               </upload>
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="step = 3" v-bind:disabled="!selected">{{ $t('step2:next') }}</v-btn>
+              <v-btn color="primary" depressed v-on:click="step = 3" v-bind:disabled="!selected">{{ $t('step2:next') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 1">{{ $t('step2:previous') }}</v-btn>
+              <v-btn color="primary" text v-on:click="step = 1">{{ $t('step2:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
@@ -88,9 +88,9 @@
               <p v-html="$t('step3:p2')" />
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="connect">{{ $t('step3:connect') }}</v-btn>
+              <v-btn color="primary" depressed v-on:click="connect">{{ $t('step3:connect') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 2">{{ $t('step3:previous') }}</v-btn>
+              <v-btn color="primary" text v-on:click="step = 2">{{ $t('step3:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
@@ -110,9 +110,9 @@
               <p v-html="$t('step4:p1')" />
             </div>
             <div class="nav" v-if="!flashing">
-              <v-btn color="primary" v-on:click="sideload">{{ $t('step4:start') }}</v-btn>
+              <v-btn color="primary" depressed v-on:click="sideload">{{ $t('step4:start') }}</v-btn>
               &nbsp;
-              <v-btn text v-on:click="step = 3">{{ $t('step4:previous') }}</v-btn>
+              <v-btn color="primary" text v-on:click="step = 3">{{ $t('step4:previous') }}</v-btn>
             </div>
           </v-stepper-content>
 
@@ -125,7 +125,7 @@
               <p v-html="$t('step5:p1')" />
             </div>
             <div class="nav">
-              <v-btn color="primary" v-on:click="reset">{{ $t('step5:reset') }}</v-btn>
+              <v-btn color="primary" depressed v-on:click="reset">{{ $t('step5:reset') }}</v-btn>
             </div>
           </v-stepper-content>
         </v-stepper>
